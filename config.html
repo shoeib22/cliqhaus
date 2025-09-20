@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Your Plan - CliqHaus</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Lexend -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #000000; /* Deep Black */
+            --primary: #ef4444; /* Red */
+            --secondary: #6b7280; /* Grey */
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top, #111111 0%, #000000 100%);
+            color: #e5e7eb; /* Lighter Grey for text */
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Custom Cursor Orb */
+        .cursor-orb {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+            z-index: 9999;
+        }
+
+        a:hover ~ .cursor-orb, button:hover ~ .cursor-orb {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: var(--secondary);
+        }
+
+        /* Glassmorphism effect */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Custom styles for checkbox */
+        .form-checkbox {
+            color: var(--primary);
+        }
+        .form-checkbox:focus {
+            ring: 2px solid var(--primary);
+            ring-offset: 2px;
+            ring-offset-color: #111;
+        }
+
+        /* Custom styles for range slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #4a5568;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-200">
+    <!-- Custom Cursor -->
+    <div class="cursor-orb"></div>
+
+    <!-- Header & Navigation -->
+    <header class="bg-transparent sticky top-0 left-0 right-0 z-50 transition-all duration-300 glass-card" id="header">
+        <div class="container mx-auto px-6 py-4">
+            <nav class="flex justify-between items-center">
+                <a href="index.html" class="z-20">
+                    <img src="image-removebg-preview.png" alt="CliqHaus Logo" class="h-32">
+                </a>
+                <a href="index.html" class="bg-gradient-to-r from-red-500 to-gray-500 hover:from-red-600 hover:to-gray-600 text-white font-semibold py-2 px-5 rounded-full transition duration-300 transform hover:scale-105">
+                    Back to Home
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Configurator Section -->
+        <section id="configurator" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl font-bold text-white mb-3">Build Your Custom Plan</h1>
+                    <p class="text-gray-400 max-w-xl mx-auto">Select the services you need for your monthly retainer.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-8 md:p-12 max-w-6xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left & Middle side: Configurator -->
+                        <div class="lg:col-span-2 space-y-8">
+                            
+                            <!-- Monthly Services -->
+                            <div>
+                                <h3 class="text-2xl font-bold text-white mb-4 border-b border-gray-700 pb-2">Monthly Retainer Services</h3>
+                                <div class="space-y-6 pt-4">
+                                    <div>
+                                        <label for="reel-count" class="flex justify-between items-center text-lg font-semibold text-white"><span>Number of Reels</span><span id="reel-count-display" class="text-red-400">0</span></label>
+                                        <input type="range" id="reel-count" min="0" max="20" value="0" class="w-full mt-2">
+                                        <p class="text-sm text-gray-500 mt-1">at ₹1,949 per reel</p>
+                                    </div>
+                                    <div>
+                                        <label for="post-count" class="flex justify-between items-center text-lg font-semibold text-white"><span>Number of Image Posts</span><span id="post-count-display" class="text-red-400">0</span></label>
+                                        <input type="range" id="post-count" min="0" max="20" value="0" class="w-full mt-2">
+                                        <p class="text-sm text-gray-500 mt-1">at ₹399 per post</p>
+                                    </div>
+                                    <div>
+                                        <label for="blog-count" class="flex justify-between items-center text-lg font-semibold text-white"><span>Number of Blogs</span><span id="blog-count-display" class="text-red-400">0</span></label>
+                                        <input type="range" id="blog-count" min="0" max="10" value="0" class="w-full mt-2">
+                                         <p class="text-sm text-gray-500 mt-1">at ₹2,000 per blog</p>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="5000" data-name="GMB Optimization" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="monthly"><span class="text-gray-300">GMB Optimization (+₹5,000/mo)</span></label>
+                                        <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="10000" data-name="Paid Ads Management" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="monthly"><span class="text-gray-300">Paid Ads Management (+₹10,000/mo)</span></label>
+                                        <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="5999" data-name="YouTube 7 min video" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="monthly"><span class="text-gray-300">YouTube 7 min video (+₹5,999/mo)</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- One-Time Projects -->
+                            <div>
+                                <h3 class="text-2xl font-bold text-white mb-4 border-b border-gray-700 pb-2">One-Time Projects</h3>
+                                <div class="space-y-6 pt-4">
+                                    <div id="one-time-addons" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="24999" data-name="Static Website (8 pages)" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Static Website (8 pages) (+₹24,999)</span></label>
+                                        <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="79999" data-name="Dynamic Website" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Dynamic Website (+₹79,999)*</span></label>
+                                        <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="59999" data-name="Podcast 1 hr" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Podcast 1 hr (+₹59,999)</span></label>
+                                        <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="4999" data-name="Branding (Logo)" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Branding (Logo) (+₹4,999)</span></label>
+                                        <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="799" data-name="Brochures" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Brochures (+₹799)</span></label>
+                                    </div>
+
+                                    <div class="pt-4">
+                                        <h4 class="text-xl font-semibold text-white mb-3">Motion Design</h4>
+                                        <div id="motion-design-addons" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="7999" data-name="Logo Animation" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Logo Animation (+₹7,999)</span></label>
+                                            <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="24999" data-name="Explainer Video (30s)" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Explainer Video (30s) (+₹24,999)</span></label>
+                                            <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="19999" data-name="Product Demo Animation" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Product Demo Animation (+₹19,999)</span></label>
+                                            <label class="flex items-center glass-card p-3 rounded-lg"><input type="checkbox" data-cost="9999" data-name="Animated Social Ad" class="form-checkbox h-5 w-5 mr-3 service-checkbox" data-type="onetime"><span class="text-gray-300">Animated Social Ad (+₹9,999)</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        <!-- Right side: Quote -->
+                        <div class="lg:col-span-1">
+                            <div class="sticky top-24">
+                                <div class="text-center bg-black/20 p-8 rounded-lg">
+                                    <!-- Duration Slider -->
+                                    <div class="mb-6">
+                                        <label for="duration-months" class="flex justify-between items-center text-lg font-semibold text-white">
+                                            <span>Contract Duration</span>
+                                            <span id="duration-display" class="text-red-400">3 Months</span>
+                                        </label>
+                                        <input type="range" id="duration-months" min="1" max="12" value="3" class="w-full mt-2">
+                                    </div>
+
+                                    <p class="text-gray-400 text-lg">Your Estimated Quote</p>
+                                    
+                                    <div class="my-4 space-y-3 text-left">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-400">Monthly Cost:</span>
+                                            <span id="monthly-price-display" class="text-xl font-semibold text-white">₹0</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-400">One-Time Costs:</span>
+                                            <span id="one-time-costs-display" class="text-xl font-semibold text-white">₹0</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr class="border-gray-700 my-4">
+
+                                    <p id="total-contract-value" class="text-4xl text-white mt-2 font-bold">Total: ₹0</p>
+                                    <p id="gst-info" class="text-sm text-gray-500">(+18% GST)</p>
+                                    
+                                    <p class="text-sm text-gray-500 mb-6 mt-2">Final price may vary based on project complexity.</p>
+                                    
+                                    <button id="request-quote-btn" class="w-full bg-gradient-to-r from-red-500 to-gray-500 hover:from-red-600 hover:to-gray-600 text-white font-semibold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                                        Request This Quote
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-transparent">
+        <div class="container mx-auto py-6 px-6 text-center text-gray-500">
+            <p>&copy; 2025 CliqHaus Media. Let's make waves. +917416201973</p>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const mouseFollower = document.querySelector('.cursor-orb');
+        document.addEventListener('mousemove', (e) => {
+            mouseFollower.style.left = e.clientX + 'px';
+            mouseFollower.style.top = e.clientY + 'px';
+        });
+
+        // --- Plan Configurator Logic ---
+        const reelCountSlider = document.getElementById('reel-count');
+        const reelCountDisplay = document.getElementById('reel-count-display');
+        const postCountSlider = document.getElementById('post-count');
+        const postCountDisplay = document.getElementById('post-count-display');
+        const blogCountSlider = document.getElementById('blog-count');
+        const blogCountDisplay = document.getElementById('blog-count-display');
+        const durationSlider = document.getElementById('duration-months');
+        const durationDisplay = document.getElementById('duration-display');
+        const allCheckboxes = document.querySelectorAll('.service-checkbox');
+        
+        const monthlyPriceDisplay = document.getElementById('monthly-price-display');
+        const oneTimeCostsDisplay = document.getElementById('one-time-costs-display');
+        const totalContractValueDisplay = document.getElementById('total-contract-value');
+        const gstInfoDisplay = document.getElementById('gst-info');
+        
+        const requestQuoteBtn = document.getElementById('request-quote-btn');
+
+        const REEL_PRICE = 1949;
+        const POST_PRICE = 399;
+        const BLOG_PRICE = 2000;
+        const GST_RATE = 0.18;
+
+        function calculatePrice() {
+            let oneTimeCost = 0;
+            let monthlyCost = 0;
+            let oneTimeSummary = [];
+            let monthlySummary = [];
+            
+            // Sliders for monthly costs
+            const reelCount = parseInt(reelCountSlider.value);
+            monthlyCost += reelCount * REEL_PRICE;
+            reelCountDisplay.textContent = reelCount;
+
+            const postCount = parseInt(postCountSlider.value);
+            monthlyCost += postCount * POST_PRICE;
+            postCountDisplay.textContent = postCount;
+            
+            const blogCount = parseInt(blogCountSlider.value);
+            monthlyCost += blogCount * BLOG_PRICE;
+            blogCountDisplay.textContent = blogCount;
+
+
+            // Checkboxes for both types
+            allCheckboxes.forEach(addon => {
+                if (addon.checked) {
+                    const cost = parseInt(addon.dataset.cost);
+                    if (addon.dataset.type === 'monthly') {
+                        monthlyCost += cost;
+                        monthlySummary.push(addon.dataset.name);
+                    } else if (addon.dataset.type === 'onetime') {
+                        oneTimeCost += cost;
+                        oneTimeSummary.push(addon.dataset.name);
+                    }
+                }
+            });
+            
+            const duration = parseInt(durationSlider.value);
+            const totalMonthlyValue = monthlyCost * duration;
+
+            const totalValueBeforeGst = totalMonthlyValue + oneTimeCost;
+            const gstAmount = totalValueBeforeGst * GST_RATE;
+            const finalTotal = totalValueBeforeGst + gstAmount;
+
+            // Update UI
+            durationDisplay.textContent = `${duration} Month${duration > 1 ? 's' : ''}`;
+            
+            monthlyPriceDisplay.textContent = `₹${monthlyCost.toLocaleString('en-IN')}`;
+            oneTimeCostsDisplay.textContent = `₹${oneTimeCost.toLocaleString('en-IN')}`;
+            totalContractValueDisplay.textContent = `Total: ₹${Math.round(finalTotal).toLocaleString('en-IN')}`;
+            gstInfoDisplay.textContent = `(+18% GST: ₹${Math.round(gstAmount).toLocaleString('en-IN')})`;
+            
+
+            return {
+                reelCount,
+                postCount,
+                blogCount,
+                monthlySummary,
+                oneTimeSummary,
+                duration,
+                monthlyCost,
+                oneTimeCost,
+                gstAmount,
+                finalTotal
+            };
+        }
+        
+        // Add event listeners
+        reelCountSlider.addEventListener('input', calculatePrice);
+        postCountSlider.addEventListener('input', calculatePrice);
+        blogCountSlider.addEventListener('input', calculatePrice);
+        durationSlider.addEventListener('input', calculatePrice);
+        allCheckboxes.forEach(addon => addon.addEventListener('change', calculatePrice));
+
+        requestQuoteBtn.addEventListener('click', () => {
+            const config = calculatePrice();
+            if (config.monthlyCost === 0 && config.oneTimeCost === 0) {
+                alert('Please select at least one service to request a quote.');
+                return;
+            }
+
+            const phoneNumber = "917416201973";
+            
+            let summary = `Hi CliqHaus! I've built a custom plan and would like a quote for the following:\n\n`;
+            
+            summary += `*Monthly Services:*\n`;
+            if (config.reelCount > 0) summary += `- Reels per Month: ${config.reelCount}\n`;
+            if (config.postCount > 0) summary += `- Image Posts per Month: ${config.postCount}\n`;
+            if (config.blogCount > 0) summary += `- Blogs per Month: ${config.blogCount}\n`;
+            config.monthlySummary.forEach(name => summary += `- ${name}\n`);
+            summary += `\n`;
+
+            if (config.oneTimeSummary.length > 0) {
+                summary += `*One-Time Projects:*\n`;
+                config.oneTimeSummary.forEach(name => summary += `- ${name}\n`);
+                summary += `\n`;
+            }
+
+            summary += `*Contract Duration:* ${config.duration} Month${config.duration > 1 ? 's' : ''}\n\n`;
+            summary += `*Quote Summary:*\n`;
+            summary += `- Total Monthly Cost: ₹${config.monthlyCost.toLocaleString('en-IN')}\n`;
+            summary += `- Total One-Time Costs: ₹${config.oneTimeCost.toLocaleString('en-IN')}\n`;
+            const subtotal = (config.monthlyCost * config.duration) + config.oneTimeCost;
+            summary += `- Subtotal: ₹${subtotal.toLocaleString('en-IN')}\n`;
+            summary += `- GST (18%): ₹${Math.round(config.gstAmount).toLocaleString('en-IN')}\n`;
+            summary += `*- Grand Total (incl. GST): ₹${Math.round(config.finalTotal).toLocaleString('en-IN')}*\n\n`;
+
+            summary += `Please let me know the next steps!`;
+
+            const encodedMessage = encodeURIComponent(summary);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // Initialize price on page load
+        window.addEventListener('DOMContentLoaded', calculatePrice);
+    </script>
+</body>
+</html>
+

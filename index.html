@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CliqHaus</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Lexend -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Three.js for 3D graphics -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #000000; /* Deep Black */
+            --primary: #ef4444; /* Red */
+            --secondary: #6b7280; /* Grey */
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top, #111111 0%, #000000 100%);
+            color: #e5e7eb; /* Lighter Grey for text */
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Custom Cursor Orb */
+        .cursor-orb {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+            z-index: 9999;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        a:hover ~ .cursor-orb, button:hover ~ .cursor-orb {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: var(--secondary);
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* 3D Canvas */
+        #bg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        /* Glassmorphism effect - adjusted for darker theme */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.5); /* Darker semi-transparent bg */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #loader {
+        opacity: 1;
+        transition: opacity 0.8s ease; /* smooth fade */
+        }
+        #loader.fade {
+        opacity: 0; /* fades out */
+}
+
+    /* Logo pulse animation */
+    @keyframes pulse {
+      0% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 0.6; transform: scale(1); }
+    }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    </style>
+</head>
+<body class="bg-black text-gray-200">
+
+      <!-- Loader (Logo Splash Screen) -->
+  <div id="loader" class="fixed inset-0 bg-black flex items-center justify-center z-[99999]">
+    <img src="image-removebg-preview.png" alt="CliqHaus Logo" class="w-45 pulse" />
+  </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-orb"></div>
+
+    <!-- Header & Navigation -->
+    <header class="bg-transparent fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="header">
+        <div class="container mx-auto px-6 py-4">
+            <nav class="flex justify-between items-center">
+                <a href="#" class="z-20">
+                    <img src="image-removebg-preview.png" alt="CliqHaus Logo" class="h-32">
+                </a>
+                
+                <div class="hidden md:flex space-x-6 items-center z-20">
+                    <a href="#about" class="text-gray-300 hover:text-white transition duration-300">The Vibe</a>
+                    <a href="#services" class="text-gray-300 hover:text-white transition duration-300">Our Magic</a>
+                    <a href="#plans" class="text-gray-300 hover:text-white transition duration-300">Plans</a>
+                    <a href="#contact" class="bg-gradient-to-r from-red-500 to-gray-500 hover:from-red-600 hover:to-gray-600 text-white font-semibold py-2 px-5 rounded-full transition duration-300 transform hover:scale-105">Let's Collab</a>
+                </div>
+                
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none z-20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </nav>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden glass-card">
+            <a href="#about" class="block py-3 px-6 text-sm text-gray-300 hover:bg-red-500/20">The Vibe</a>
+            <a href="#services" class="block py-3 px-6 text-sm text-gray-300 hover:bg-red-500/20">Our Magic</a>
+            <a href="#plans" class="block py-3 px-6 text-sm text-gray-300 hover:bg-red-500/20">Plans</a>
+            <a href="#contact" class="block py-3 px-6 text-sm text-gray-300 hover:bg-red-500/20">Let's Collab</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="min-h-screen flex items-center justify-center text-white relative overflow-hidden">
+            <canvas id="bg-canvas"></canvas>
+            <div class="container mx-auto px-6 text-center z-10">
+                <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-4">
+                    Let's Build Your <span class="gradient-text">Vision, Together</span>.
+                </h1>
+                <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-8">
+                    We partner with you to bring ideas to life, creating powerful visuals and strategies that captivate and connect.
+                </p>
+                <a href="#plans" class="bg-gradient-to-r from-red-500 to-gray-500 hover:from-red-600 hover:to-gray-600 text-white font-bold py-4 px-10 rounded-full transition duration-300 transform hover:scale-105 inline-block text-lg">
+                    See Our Plans &#x2728;
+                </a>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl font-bold text-white mb-3">The Vibe</h2>
+                    <p class="text-gray-400 max-w-xl mx-auto">We're not your typical agency. We're a crew of creators, storytellers, and marketing nerds obsessed with making cool stuff.</p>
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2 reveal">
+                        <a href="clients.html">
+                            <img src="https://placehold.co/600x450/000000/ef4444?text=Creator+Studio" alt="Creative Studio" class="rounded-2xl shadow-2xl w-full transform transition duration-500 hover:scale-105 hover:rotate-[-2deg]">
+                        </a>
+                    </div>
+                    <div class="md:w-1/2 text-gray-300 reveal" style="transition-delay: 200ms;">
+                        <h3 class="text-3xl font-semibold text-white mb-4">It's simple: we get it.</h3>
+                        <p class="mb-6">We live and breathe internet culture. Our mission is to help brands create authentic connections, not just ads. We combine cinematic videography with marketing strategies that are built for today's digital world.</p>
+                        <p>Basically, we make your brand the main character. &#x1F3AC;</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl font-bold text-white mb-3">Our Magic &#x1FA84;</h2>
+                     <p class="text-gray-400 max-w-xl mx-auto">This is how we make your brand unforgettable.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Service Card 1 -->
+                    <div class="glass-card p-8 rounded-2xl text-center reveal transform transition duration-500 hover:scale-105 hover:border-red-500">
+                        <h3 class="text-2xl font-bold text-white mb-4">High-Impact Visuals</h3>
+                        <p class="text-gray-400">From high-energy social media clips to stunning brand films, we create videos that people actually want to watch and share.</p>
+                    </div>
+                    <!-- Service Card 2 -->
+                    <div class="glass-card p-8 rounded-2xl text-center reveal transform transition duration-500 hover:scale-105 hover:border-gray-500" style="transition-delay: 200ms;">
+                        <h3 class="text-2xl font-bold text-white mb-4">Marketing That Hits</h3>
+                        <p class="text-gray-400">We don't just post and pray. We build data-driven campaigns that target the right people, on the right platforms, at the right time.</p>
+                    </div>
+                    <!-- Service Card 3 -->
+                    <div class="glass-card p-8 rounded-2xl text-center reveal transform transition duration-500 hover:scale-105 hover:border-red-500" style="transition-delay: 400ms;">
+                        <h3 class="text-2xl font-bold text-white mb-4">Total Brand Identity</h3>
+                        <p class="text-gray-400">We help you find your voice, nail your aesthetic, and build a narrative that turns followers into super-fans.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Plans Section -->
+        <section id="plans" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl font-bold text-white mb-3">Find Your Tier</h2>
+                     <p class="text-gray-400 max-w-xl mx-auto">Straightforward pricing for projects of all sizes.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <!-- Plan 1: Ignite -->
+                    <div class="glass-card rounded-2xl p-8 flex flex-col reveal transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/20">
+                        <h3 class="text-2xl font-bold text-white mb-2">Ignite</h3>
+                        <p class="text-gray-400 mb-6">Perfect for getting started.</p>
+                        <p class="text-4xl font-bold text-white mb-6"> ₹19,999</p>
+                        <ul class="space-y-4 text-gray-300 mb-8 flex-grow">
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>1 x Short Form Video</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Basic Editing & Graphics</li>
+                             <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>1 Round of Revisions</li>
+                        </ul>
+                        <a href="#contact" class="w-full text-center border border-red-500 text-red-500 font-semibold py-3 px-6 rounded-full transition duration-300 hover:bg-red-500 hover:text-white">Get Started</a>
+                    </div>
+
+                    <!-- Plan 2: Amplify (Most Popular) -->
+                    <div class="glass-card rounded-2xl p-8 flex flex-col reveal border-2 border-red-500 transform scale-105 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/20 hover:scale-110" style="transition-delay: 200ms;">
+                         <p class="text-center font-bold text-red-400 mb-2">MOST POPULAR</p>
+                        <h3 class="text-2xl font-bold text-white mb-2">Amplify</h3>
+                        <p class="text-gray-400 mb-6">For brands ready to grow.</p>
+                        <p class="text-4xl font-bold text-white mb-6"> ₹29,999</p>
+                        <ul class="space-y-4 text-gray-300 mb-8 flex-grow">
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>3 x Short Form Videos</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Advanced Editing & VFX</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Thumbnail Design</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>2 Rounds of Revisions</li>
+                        </ul>
+                         <a href="#contact" class="w-full text-center bg-gradient-to-r from-red-500 to-gray-500 hover:from-red-600 hover:to-gray-600 text-white font-semibold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">Get Started</a>
+                    </div>
+
+                    <!-- Plan 3: Dominate -->
+                    <div class="glass-card rounded-2xl p-8 flex flex-col reveal transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/20" style="transition-delay: 400ms;">
+                        <h3 class="text-2xl font-bold text-white mb-2">Dominate</h3>
+                        <p class="text-gray-400 mb-6">For a complete brand takeover.</p>
+                        <p class="text-4xl font-bold text-white mb-6">Custom Quote</p>
+                         <ul class="space-y-4 text-gray-300 mb-8 flex-grow">
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Full Content Package</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Marketing Strategy</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Dedicated Support</li>
+                            <li class="flex items-center"><svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Unlimited Revisions</li>
+                        </ul>
+                        <a href="config.html" class="w-full text-center border border-red-500 text-red-500 font-semibold py-3 px-6 rounded-full transition duration-300 hover:bg-red-500 hover:text-white">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="glass-card rounded-3xl p-8 md:p-16 max-w-4xl mx-auto text-center reveal">
+                    <h2 class="text-4xl font-bold text-white mb-4">Ready to Build?</h2>
+                    <p class="text-gray-400 mb-8 max-w-xl mx-auto">Got a project? An idea? Drop us a line. We're ready to create something legendary together.</p>
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input type="text" name="name" placeholder="Your Name" required class="w-full bg-gray-900/50 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 transition">
+                            <input type="email" name="email" placeholder="Your Email" required class="w-full bg-gray-900/50 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 transition">
+                        </div>
+                        <textarea name="message" placeholder="Tell us about your project..." rows="5" required class="w-full bg-gray-900/50 text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 transition"></textarea>
+                        <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-gray-500 hover:from-red-600 hover:to-gray-600 text-white font-bold py-3 px-4 rounded-full transition duration-300 text-lg transform hover:scale-105">Send It &#x1F680;</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-transparent">
+        <div class="container mx-auto py-6 px-6 text-center text-gray-500">
+            <p>&copy; 2025 CliqHaus Media. Let's make waves. +917416201973</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- Frontend Animations & Interactivity ---
+
+        // 3D Hero Animation
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.position.setZ(5);
+        const geometry = new THREE.TorusKnotGeometry(2, 0.5, 100, 16);
+        const material = new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.8, roughness: 0.3 });
+        const torusShape = new THREE.Mesh(geometry, material);
+        scene.add(torusShape);
+        const pointLight = new THREE.PointLight(0xffffff, 2);
+        pointLight.position.set(5, 5, 5);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(pointLight, ambientLight);
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+        function animateScene() {
+            requestAnimationFrame(animateScene);
+            torusShape.rotation.y += 0.002;
+            torusShape.rotation.x += 0.001;
+            camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
+            camera.position.y += (mouseY * 2 - camera.position.y) * 0.02;
+            camera.lookAt(scene.position);
+            renderer.render(scene, camera);
+        }
+        animateScene();
+
+        // Custom Cursor
+        const mouseFollower = document.querySelector('.cursor-orb');
+        document.addEventListener('mousemove', (e) => {
+            mouseFollower.style.left = e.clientX + 'px';
+            mouseFollower.style.top = e.clientY + 'px';
+        });
+
+        // Scroll Reveal Animations
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => scrollObserver.observe(el));
+        
+        // Header Effects on Scroll
+        const pageHeader = document.getElementById('header');
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            // Glass card effect
+            pageHeader.classList.toggle('glass-card', window.scrollY > 50);
+
+            // Disappearing effect
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > 100) { 
+                // Scrolling Down
+                pageHeader.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling Up
+                pageHeader.style.transform = 'translateY(0)';
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+
+        // Mobile Menu Toggle & Smooth Scrolling
+        const navToggleButton = document.getElementById('mobile-menu-button');
+        const mobileNavMenu = document.getElementById('mobile-menu');
+        navToggleButton.addEventListener('click', () => mobileNavMenu.classList.toggle('hidden'));
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                // Only apply smooth scroll to links with more than just a '#'
+                if (href && href.length > 1) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+                    if (!mobileNavMenu.classList.contains('hidden')) {
+                        mobileNavMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Contact Form Handler
+        const contactForm = document.getElementById('contact-form');
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.querySelector('input[name="name"]').value;
+            const message = document.querySelector('textarea[name="message"]').value;
+            const phoneNumber = "917416201973"; 
+            
+            const whatsappMessage = `Hi CliqHaus! My name is ${name}. I'm interested in discussing a project.\n\nHere are the details:\n${message}`;
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        });
+
+            window.addEventListener("load", () => {
+            const loader = document.getElementById("loader");
+
+            // Start fading after 1s
+            setTimeout(() => {
+            loader.classList.add("fade");
+            }, 1000);
+
+            // Remove from DOM after fade finishes
+            setTimeout(() => {
+            loader.style.display = "none";
+            }, 1800); // 1000ms delay + 800ms fade
+        });
+
+
+        
+    </script>
+</body>
+</html>
+

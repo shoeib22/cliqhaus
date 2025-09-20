@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Clients - CliqHaus</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Lexend -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #000000; /* Deep Black */
+            --primary: #ef4444; /* Red */
+            --secondary: #6b7280; /* Grey */
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top, #111111 0%, #000000 100%);
+            color: #e5e7eb; /* Lighter Grey for text */
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Custom Cursor Orb */
+        .cursor-orb {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+            z-index: 9999;
+        }
+
+        a:hover ~ .cursor-orb, button:hover ~ .cursor-orb {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: var(--secondary);
+        }
+
+        /* Glassmorphism effect */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-200">
+    <!-- Custom Cursor -->
+    <div class="cursor-orb"></div>
+
+    <!-- Header & Navigation -->
+    <header class="bg-transparent sticky top-0 left-0 right-0 z-50 transition-all duration-300 glass-card" id="header">
+        <div class="container mx-auto px-6 py-4">
+            <nav class="flex justify-between items-center">
+                <a href="index.html" class="z-20">
+                    <img src="image-removebg-preview.png" alt="CliqHaus Logo" class="h-32">
+                </a>
+                <a href="index.html" class="bg-gradient-to-r from-red-500 to-gray-500 hover:from-red-600 hover:to-gray-600 text-white font-semibold py-2 px-5 rounded-full transition duration-300 transform hover:scale-105">
+                    Back to Home
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Clients Section -->
+        <section id="clients" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl font-bold text-white mb-3">Who We've Partnered With</h1>
+                    <p class="text-gray-400 max-w-xl mx-auto">We're proud to have worked with a diverse range of innovative brands and professionals.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    
+                    <!-- Client Card 1: Dr. Niharika -->
+                    <div class="glass-card p-8 flex flex-col items-center text-center rounded-2xl transition-all duration-300 hover:border-red-500 border border-transparent hover:-translate-y-2">
+                        <img src="https://i.ibb.co/dwQmfNdK/niharikaakka.jpg" alt="Dr. Niharika Logo" class="w-32 h-32 rounded-full mb-4 object-cover border-2 border-gray-700">
+                        <h3 class="text-2xl font-bold text-white">Dr. Niharika</h3>
+                        <p class="text-gray-400 mb-4">OB-GYN & Health Influencer</p>
+                        <a href="https://www.instagram.com/drniharikaobgyn" target="_blank" rel="noopener noreferrer" class="mt-auto w-full text-center border border-red-500 text-red-500 font-semibold py-2 px-6 rounded-full transition duration-300 hover:bg-red-500 hover:text-white">
+                            View on Instagram
+                        </a>
+                    </div>
+
+
+                    <!-- Client Card 2: Avika Mind Health -->
+                    <div class="glass-card p-8 flex flex-col items-center text-center rounded-2xl transition-all duration-300 hover:border-red-500 border border-transparent hover:-translate-y-2">
+                        <img src="https://avika.ai/lovable-uploads/88abca82-b15c-48cd-8f01-446d39b89160.png" alt="Avika Mind Health Logo" class="w-31 h-31 rounded-full mb-4 object-cover border-2 border-gray-700">
+                        <h3 class="text-2xl font-bold text-white">Avika Mind Health</h3>
+                        <p class="text-gray-400 mb-4">Mental Wellness Brand</p>
+                        <a href="https://www.instagram.com/avikamindhealth" target="_blank" rel="noopener noreferrer" class="mt-auto w-full text-center border border-red-500 text-red-500 font-semibold py-2 px-6 rounded-full transition duration-300 hover:bg-red-500 hover:text-white">
+                            View on Instagram
+                        </a>
+                    </div>
+
+                    <!-- Client Card 3: HappyWrap -->
+                    <div class="glass-card p-8 flex flex-col items-center text-center rounded-2xl transition-all duration-300 hover:border-red-500 border border-transparent hover:-translate-y-2">
+                        <img src="https://www.happywrap.in/logos/logo2.svg" alt="HappyWrap Logo" class="w-32 h-32 rounded-full mb-4 object-cover border-2 border-gray-700">
+                        <h3 class="text-2xl font-bold text-white">HappyWrap</h3>
+                        <p class="text-gray-400 mb-4">Innovative Product Brand</p>
+                        <a href="https://www.instagram.com/happywrap.in" target="_blank" rel="noopener noreferrer" class="mt-auto w-full text-center border border-red-500 text-red-500 font-semibold py-2 px-6 rounded-full transition duration-300 hover:bg-red-500 hover:text-white">
+                            View on Instagram
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-transparent">
+        <div class="container mx-auto py-6 px-6 text-center text-gray-500">
+            <p>&copy; 2025 CliqHaus Media. Let's make waves. +917416201973</p>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const mouseFollower = document.querySelector('.cursor-orb');
+        document.addEventListener('mousemove', (e) => {
+            mouseFollower.style.left = e.clientX + 'px';
+            mouseFollower.style.top = e.clientY + 'px';
+        });
+    </script>
+</body>
+</html>
+
